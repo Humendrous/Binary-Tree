@@ -1,5 +1,7 @@
 #include<iostream>
+#include<climits>
 using namespace std;
+
 
 class Node
 {
@@ -123,6 +125,21 @@ Node *deleteNode(Node *root ,int target)
       }
    }
 }
+bool checkBST(Node *root, int &prev)
+{
+    if(!root){
+    return 1;
+    }
+    if(!checkBST(root->left,prev));
+    return 0;
+
+    if(root->data<= prev)
+    return 0;
+
+    prev=root->data;
+
+    return checkBST(root->right,prev);
+}
 int main()
 {
     int arr[]={5,3,4,7,9,10,12,15};
@@ -132,8 +149,10 @@ int main()
     {
         root=BST(root,arr[i]);
     }
-    int target=12;
+    // int target=12;
     // cout<<search(root,target)<<endl;
-    root=deleteNode(root,target);
-    inorder(root);
+    // root=deleteNode(root,target);
+    // inorder(root);
+    int prev=INT_MIN;
+    cout<<checkBST(root,prev);
 }
