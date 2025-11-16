@@ -105,6 +105,97 @@ Node *insert(Node *root,int key)
         return root;
     }
 }
+//ADD deletion in AVL tree
+Node *deleteNode(Node *root,int key)
+{
+    //root doesn,t Exist
+    if(!root)
+    return NULL;
+
+    //Finding Key on left side
+    if(root->data>key){
+        root->left=deleteNode(root->left,key);
+    }
+    //Finding key on right side
+    else if(root->data<key)
+    {
+        root->right=deleteNode(root->right,key);
+    }
+    else
+    {
+        //Leaf Node
+        if(!root->left && !root->right)
+        {
+            delete root;
+            return NULL;
+        }
+        //Only one child Exist
+        //Left child Exist
+        else if(root->left && !root->right)
+        {
+            Node *temp= root->left;
+            delete root;
+            return temp;
+        }
+        //Right child Exist
+        else if(root->right && !root->left)
+        {
+            Node *temp= root->right;
+            delete root;
+            return temp;
+        }
+        // WHen both child Exist
+        else
+        {
+            //Right side Smallest element
+            Node *curr=root->right;
+            while(curr->left)
+            {
+                curr=curr->left;
+            }
+            
+            root->data= curr->data;
+            root->right=deleteNode(root->right,curr->data);
+
+        }
+    }
+    //Update Height
+    root->Height=1 + max(getHeight(root->left),getHeight(root->right));
+
+    // CHeck Balancing
+    int balance=getbalance(root);
+    
+    //Left side
+    if(balance>1)
+    {
+        //LL
+        if(getbalance(root->left)>=0)
+        {
+            return rightrotation(root);
+        }
+        //LR
+        else
+        {
+            root->left=leftrotation(root);
+            return rightrotation(root);
+        }
+    }
+    else if(balance<-1)
+    {
+        // RR
+        if(getbalance(root->right)>=0){
+            return leftrotation(root);
+        }
+        //RL
+        else{
+            root->right=rightrotation(root);
+            return leftrotation(root);
+        }
+    }
+    else{
+        return root;
+    }
+}
 void preorder(Node *root)
 {
     if(!root)
